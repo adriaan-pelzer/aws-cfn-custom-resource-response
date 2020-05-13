@@ -36,7 +36,7 @@ const sendResponse = event => ({ Status, Reason }, callback) => {
   const { body, ...options } = buildResponse(event);
   const request = https.request(options, ({ statusCode, headers }) => (statusCode < 200 || statusCode > 299)
     ? callback({ statusCode, headers })
-    : callback(null, { statusCode, headers });
+    : callback(null, { statusCode, headers })
   );
 
   request.on('error', error => callback(error));
