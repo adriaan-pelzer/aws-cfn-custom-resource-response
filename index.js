@@ -29,7 +29,7 @@ const buildResponse = ({
 };
 
 const sendResponse = event => ({ Status, Reason }, callback) => {
-  if (!ResponseURL) {
+  if (!event.ResponseURL) {
     return callback(null, { Status, Reason });
   }
 
