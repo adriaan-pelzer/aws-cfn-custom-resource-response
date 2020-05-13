@@ -23,7 +23,7 @@ const buildResponse = ({
     headers: {
       'content-type': '',
       'content-length': responseBody.length
-    }.
+    },
     body: responseBody
   };
 };
