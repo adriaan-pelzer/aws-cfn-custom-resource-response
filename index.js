@@ -6,6 +6,8 @@ const buildResponse = ({
   StackId,
   RequestId,
   LogicalResourceId
+  Status,
+  Reason
 }) => {
   const responseBody = JSON.stringify({
     Status,
@@ -33,7 +35,7 @@ const sendResponse = event => ({ Status, Reason }, callback) => {
     return callback(null, { Status, Reason });
   }
 
-  const { body, ...options } = buildResponse(event);
+  const { body, ...options } = buildResponse({ ...event, Status, Reason });
   const request = https.request(options, ({ statusCode, headers }) => (statusCode < 200 || statusCode > 299)
     ? callback({ statusCode, headers })
     : callback(null, { statusCode, headers })

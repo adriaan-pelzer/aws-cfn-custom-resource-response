@@ -2,7 +2,7 @@
 ## A library that builds & sends the right custom resource response out of the lambda event
 
 ### example
-```
+```js
 const sendAWSResponse = require('aws-cfn-custom-resource-response');
 
 module.exports.handler = (event, context, callback) => {
