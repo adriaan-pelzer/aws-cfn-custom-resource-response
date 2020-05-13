@@ -5,7 +5,7 @@ const buildResponse = ({
   ResponseURL,
   StackId,
   RequestId,
-  LogicalResourceId
+  LogicalResourceId,
   Status,
   Reason
 }) => {
