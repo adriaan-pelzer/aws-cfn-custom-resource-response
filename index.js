@@ -5,6 +5,7 @@ const buildResponse = ({
   ResponseURL,
   StackId,
   RequestId,
+  PhysicalResourceId,
   LogicalResourceId,
   Status,
   Reason
@@ -12,7 +13,7 @@ const buildResponse = ({
   const responseBody = JSON.stringify({
     Status,
     Reason,
-    PhysicalResourceId: LogicalResourceId,
+    PhysicalResourceId: PhysicalResourceId || LogicalResourceId,
     StackId,
     RequestId,
     LogicalResourceId
