@@ -1,6 +1,10 @@
 const https = require('https');
 const url = require('url');
 
+const { DEBUG } = process.env;
+
+const log = DEBUG ? console.log : () => {};
+
 const buildResponse = ({
   ResponseURL,
   StackId,
@@ -19,7 +23,10 @@ const buildResponse = ({
     LogicalResourceId
   });
 
-  return {
+  log('Sending response body:');
+  log(responseBody);
+
+  const fullResponse = {
     ...url.parse(ResponseURL),
     port: 443,
     method: 'PUT',
@@ -29,6 +36,11 @@ const buildResponse = ({
     },
     body: responseBody
   };
+
+  log('Sending full response:');
+  log(JSON.stringify(fullResponse));
+
+  return fullResponse;
 };
 
 const sendResponse = event => ({ Status, Reason }, callback) => {
@@ -37,14 +49,24 @@ const sendResponse = event => ({ Status, Reason }, callback) => {
   }
 
   const { body, ...options } = buildResponse({ ...event, Status, Reason });
-  const request = https.request(options, ({ statusCode, headers }) => (statusCode < 200 || statusCode > 299)
-    ? callback({ statusCode, headers })
-    : callback(null, { statusCode, headers })
-  );
+  const ctx = {
+    data: []
+  };
 
+  const request =  https.request(options);
+
+  request.on('response', ({ statusCode, headers }) => {
+    log('statusCode', statusCode);
+    log('Data:');
+    log(ctx.data.join(''));
+    return callback(null, {
+      statusCode,
+      headers
+    });
+  });
   request.on('error', error => callback(error));
+  request.on('data', d => ctx.data.push(d.toString()));
   request.write(body);
-  request.end();
 };
 
 module.exports = sendResponse;
